@@ -3,13 +3,44 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = "karan-sonar-app"
-        CONTAINER_NAME = "sonarqube-service"
+        CONTAINER_NAME = "onix-website-container"
+        APP_PORT = "8085"
     }
 
     stages {
+        stage('SCM Checkout') {
+            steps {
+                // Pulls the code and the .properties file
+                checkout scm
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    // Pulls the scanner tool from Global Tool Configuration
+                    def scannerHome = tool 'SonarScanner' 
+                    
+                    // 'SonarQubeServer' must match the Name in Manage Jenkins > System
+                    withSonarQubeEnv('SonarQubeServer') {
+                        // Because you have the properties file, we don't need -D parameters!
+                        sh "${scannerHome}/bin/sonar-scanner"
+                    }
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    // Waits for the Sonar VM to report back the results
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
         stage('Docker Cleanup') {
             steps {
-                // Remove existing container to avoid name/port conflicts
                 sh "docker stop ${CONTAINER_NAME} || true"
                 sh "docker rm ${CONTAINER_NAME} || true"
             }
@@ -17,23 +48,25 @@ pipeline {
 
         stage('Build Image') {
             steps {
-                // Build using the Dockerfile in the repo
                 sh "docker build -t ${DOCKER_IMAGE}:${BUILD_NUMBER} ."
                 sh "docker tag ${DOCKER_IMAGE}:${BUILD_NUMBER} ${DOCKER_IMAGE}:latest"
             }
         }
 
-        stage('Deploy Container') {
+        stage('Deploy App') {
             steps {
-                // Run SonarQube on port 9000
-                sh "docker run -d --name ${CONTAINER_NAME} -p 9000:9000 ${DOCKER_IMAGE}:latest"
+                // Runs the container on port 8085
+                sh "docker run -d --name ${CONTAINER_NAME} -p ${APP_PORT}:80 ${DOCKER_IMAGE}:latest"
             }
         }
     }
 
     post {
         success {
-            echo "Successfully deployed SonarQube!"
+            echo "Successfully deployed! Access: http://<Jenkins-IP>:${APP_PORT}"
+        }
+        failure {
+            echo "Build failed. Check the Jenkins Console or SonarQube Dashboard."
         }
     }
 }
