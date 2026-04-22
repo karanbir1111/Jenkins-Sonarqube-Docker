@@ -8,13 +8,6 @@ pipeline {
     }
 
     stages {
-        stage('SCM Checkout') {
-            steps {
-                // Pulls the code and the .properties file
-                checkout scm
-            }
-        }
-
         stage('SonarQube Analysis') {
             steps {
                 script {
