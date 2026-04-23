@@ -43,4 +43,4 @@ The pipeline is designed to ensure that **only high-quality, tested code** reach
 4. The application is served via Nginx inside a Docker container for high performance.
 
 ---
-**Author: Karan** *Certified Azure Administrator | Aspiring Cloud & DevOps Engineer*
+**Author: Karanbir Singh** *Certified Azure Administrator | Aspiring Cloud & DevOps Engineer*
