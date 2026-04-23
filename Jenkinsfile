@@ -16,7 +16,6 @@ pipeline {
                     
                     // 'SonarQubeServer' must match the Name in Manage Jenkins > System
                     withSonarQubeEnv('SonarQubeServer') {
-                        // Because you have the properties file, we don't need -D parameters!
                         sh "${scannerHome}/bin/sonar-scanner"
                     }
                 }
