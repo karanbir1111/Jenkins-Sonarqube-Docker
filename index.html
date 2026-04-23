@@ -3,25 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Karan's DevOps Portfolio">
-    <title>Karan | Cloud Engineer</title>
+    <meta name="description" content="Professional Portfolio for Karan - Cloud and Systems Administrator">
+    <title>Karan | Cloud Engineer Portfolio</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer">
 </head>
 <body>
     <header role="banner">
-        <nav role="navigation">
-            <h1 style="text-align:center; padding:20px; background:#1e293b; color:white;">
-                Karan's CI/CD Pipeline Success
-            </h1>
+        <nav role="navigation" aria-label="Main navigation">
+            <div class="container">
+                <h1 class="logo">Karan<span>.DevOps</span></h1>
+                <ul class="nav-links">
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
         </nav>
     </header>
-    <main style="max-width:800px; margin:50px auto; text-align:center; font-family:sans-serif;">
-        <h2>Status: <span style="color:green;">Passed Quality Gate</span></h2>
-        <p>This website was deployed automatically via Jenkins, scanned by SonarQube, and containerized with Docker.</p>
-        <div style="margin-top:30px; padding:20px; border:1px solid #ddd; border-radius:10px;">
-            <h3>Tech Stack Used:</h3>
-            <p>Azure | Jenkins | SonarQube | Docker</p>
-        </div>
+
+    <main id="main-content">
+        <section class="hero">
+            <div class="container">
+                <h2>Cloud & Systems Administrator</h2>
+                <p>Building automated, scalable, and secure cloud infrastructure through CI/CD.</p>
+                <div class="tech-stack">
+                    <span><i class="fab fa-azure"></i> Azure</span>
+                    <span><i class="fab fa-docker"></i> Docker</span>
+                    <span><i class="fab fa-jenkins"></i> Jenkins</span>
+                </div>
+                <a href="#projects" class="btn">View My Work</a>
+            </div>
+        </section>
+
+        <section id="about" class="section">
+            <div class="container">
+                <h3>About Me</h3>
+                <hr>
+                <p>Certified Azure Administrator (AZ-104) with deep expertise in managing hybrid cloud environments and automating software delivery pipelines.</p>
+            </div>
+        </section>
+
+        <section id="projects" class="section bg-light">
+            <div class="container">
+                <h3>Technical Projects</h3>
+                <hr>
+                <div class="project-card">
+                    <h4>Jenkins-Sonarqube-Docker Pipeline</h4>
+                    <p>A complete CI/CD automation project using SonarQube for static code analysis and Docker for containerized deployment.</p>
+                </div>
+            </div>
+        </section>
     </main>
+
+    <footer role="contentinfo">
+        <div class="container">
+            <p>&copy; 2026 Karan | Built with a Secure Jenkins CI/CD Pipeline</p>
+        </div>
+    </footer>
 </body>
 </html>
