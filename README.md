@@ -3,6 +3,7 @@
 A professional DevOps project demonstrating a fully automated workflow from code push to live deployment. This project showcases the integration of Azure cloud infrastructure, automated quality checks, and containerized delivery.
 
 ## 🏗️ Project Architecture
+![Project Architecture Diagram](./screenshots/architecture.png)
 The pipeline is designed to ensure that **only high-quality, tested code** reaches the server:
 
 1. **Source Control:** Code is managed and versioned in **GitHub**.
