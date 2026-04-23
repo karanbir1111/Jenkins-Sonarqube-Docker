@@ -24,7 +24,7 @@ The pipeline is designed to ensure that **only high-quality, tested code** reach
 ## 🚀 Key Features & Troubleshooting
 * **Azure Infrastructure Management:** Configured Virtual Machines and Network Security Groups (NSGs) for secure communication across ports 8080, 9000, and 8085.
 * **Proactive Quality Control:** Integrated SonarQube to catch security hotspots and bugs before they reach production.
-* **Resource Optimization:** Managed low-memory environments on Azure by implementing Linux Swap space and tuning JVM settings to ensure 100% pipeline uptime.
+* **Resource Optimization & Scaling:** Managed resource constraints on Azure by vertically scaling infrastructure from B1ms to B2s instances, ensuring sufficient compute power and memory for 100% pipeline stability during heavy SonarQube scans.
 * **Automated Cleanup:** The pipeline automatically handles Docker image versioning and container cleanup to prevent resource conflicts.
 
 ## 📸 Project Snapshots
