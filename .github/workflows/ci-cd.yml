@@ -1,0 +1,87 @@
+name: CI/CD Pipeline - SonarQube, Docker Build and Deploy
+on:
+  push:
+    branches:
+      - GitHubActions
+  workflow_dispatch:
+    # adds a manual "Run workflow" button
+
+jobs:
+  # ─────────────────────────────────────────────
+  # JOB 1: SonarQube Analysis + Quality Gate
+  # Was: stage('SonarQube Analysis') + stage('Quality Gate') in Jenkins
+  # ─────────────────────────────────────────────
+  sonarqube:
+    name: SonarQube Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # needed by SonarCloud for accurate analysis
+
+      - name: Run Sonarcloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Auto created by GitHub
+  # ─────────────────────────────────────────────
+  # JOB 2: Build Docker image and push to Docker Hub
+  # Was: stage('Docker Cleanup') + stage('Build Image') in Jenkins
+  # Runs ONLY after sonarqube job passes (Quality Gate enforced)
+  # ─────────────────────────────────────────────
+  build-and-push:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+    needs: sonarqube # waits for Job 1 — if sonar fails, this never runs
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            darkknight111/onix-website:latest
+            darkknight111/onix-website:${{ github.run_number }}
+
+            # ─────────────────────────────────────────────
+  # JOB 3: Deploy — pull new image and run container
+  # Was: stage('Deploy App') in Jenkins
+  # Runs ONLY after build-and-push job passes
+  # ─────────────────────────────────────────────
+  deploy:
+    name: Deploy Container
+    runs-on: ubuntu-latest
+    needs: build-and-push # waits for Job 2
+
+    steps:
+      - name: SSH into server and deploy
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # Cleanup — same as your Jenkins Docker Cleanup stage
+            docker stop onix-website-container || true
+            docker rm   onix-website-container || true
+
+            # Pull latest image and run — same as your Deploy App stage
+            docker pull darkknight111/onix-website:latest
+            docker run -d \
+              --name onix-website-container \
+              -p 8085:80 \
+              darkknight111/onix-website:latest
+
+            echo "Deployed! Access at http://$(hostname -I | awk '{print $1}'):8085"
