@@ -2,7 +2,7 @@ name: CI/CD Pipeline - Sonar, Docker, and Terraform
 
 on:
   push:
-    branches: [ main, github-actions ]
+    branches: [ GitHub Actions ]
   workflow_dispatch:
     inputs:
       action:
