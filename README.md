@@ -60,7 +60,7 @@ To run this pipeline, the following secrets must be configured in GitHub:
 
 ---
 
-## **📁 Project Structure**
+## 📁 Project Structure
 ```text
 ├── .github/workflows/
 │   └── ci-cd.yml          # GitHub Actions Pipeline definition
@@ -75,7 +75,6 @@ To run this pipeline, the following secrets must be configured in GitHub:
 │   └── Dockerfile         # Container manifest
 └── README.md
 
----
-
-**Author:** **Karanbir Singh**
-*Certified Azure Administrator (AZ-104) | Specializing in DevOps, Cloud Engineering, and Automated Infrastructure.*
+👤 Author
+Karanbir Singh
+Certified Azure Administrator (AZ-104) | Specializing in DevOps, Cloud Engineering, and Automated Infrastructure.
