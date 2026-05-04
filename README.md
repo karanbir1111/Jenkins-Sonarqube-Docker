@@ -76,5 +76,6 @@ To run this pipeline, the following secrets must be configured in GitHub:
 └── README.md
 
 ---
+
 **Author:** **Karanbir Singh**
 *Certified Azure Administrator (AZ-104) | Specializing in DevOps, Cloud Engineering, and Automated Infrastructure.*
