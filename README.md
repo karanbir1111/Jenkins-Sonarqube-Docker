@@ -1,47 +1,79 @@
-# 🚀 End-to-End Automated CI/CD Pipeline
+# 🚀 Modernized Git-to-Azure Serverless Pipeline
 
-A professional DevOps project demonstrating a fully automated workflow from code push to live deployment. This project showcases the integration of Azure cloud infrastructure, automated quality checks, and containerized delivery.
+## **Overview**
+This project demonstrates a complete migration from a legacy Jenkins-based environment to a fully automated **CI/CD** and **Infrastructure as Code (IaC)** pipeline. It automates the deployment of a containerized static website to **Azure Container Apps** while integrating security and quality gates at every step.
 
-## 🏗️ Project Architecture
-![Project Architecture Diagram](./screenshots/architecture.png)
-The pipeline is designed to ensure that **only high-quality, tested code** reaches the server:
-
-1. **Source Control:** Code is managed and versioned in **GitHub**.
-2. **Continuous Integration:** **Jenkins** (hosted on an Azure B2s VM) automatically detects changes and triggers the build.
-3. **Automated Code Review:** **SonarQube** performs a deep scan for bugs and security risks before any code is built.
-4. **Gatekeeper:** A "Quality Gate" acts as a safety switch—if the code fails quality standards, the pipeline stops to prevent a broken deployment.
-5. **Containerization:** **Docker** packages the application into a lightweight, portable image.
-6. **Instant Deployment:** The updated application is launched automatically as a Docker container on **Port 8085**.
-
-## 🛠️ Tech Stack
-* **Cloud Provider:** Microsoft Azure (Virtual Machines)
-* **CI/CD Tool:** Jenkins (Pipeline-as-Code)
-* **Quality Assurance:** SonarQube (Static Analysis)
-* **Containerization:** Docker
-* **Web Server:** Nginx (Alpine-based)
-* **Certification Focus:** Infrastructure management based on **AZ-104 (Azure Administrator)** standards.
-
-## 🚀 Key Features & Troubleshooting
-* **Azure Infrastructure Management:** Configured Virtual Machines and Network Security Groups (NSGs) for secure communication across ports 8080, 9000, and 8085.
-* **Proactive Quality Control:** Integrated SonarQube to catch security hotspots and bugs before they reach production.
-* **Resource Optimization & Scaling:** Managed resource constraints on Azure by vertically scaling infrastructure from B1ms to B2s instances, ensuring sufficient compute power and memory for 100% pipeline stability during heavy SonarQube scans.
-* **Automated Cleanup:** The pipeline automatically handles Docker image versioning and container cleanup to prevent resource conflicts.
-
-## 📸 Project Snapshots
-
-### 1. Automated Pipeline (Jenkins)
-![SonarQube Gate](screenshots/1.png)
-*Successfully passing the SonarQube Quality Gate.*
-
-### 2. Live Application
-![Live App](screenshots/2.png)
-*The final application running live in a Docker container.*
-
-## 📖 Setup Summary
-1. Jenkins is configured with a Webhook to track GitHub pushes.
-2. The `Jenkinsfile` defines the automation stages (Checkout, Scan, Build, Deploy).
-3. The `sonar-project.properties` manages the scan metadata and server connection.
-4. The application is served via Nginx inside a Docker container for high performance.
+The architecture follows a "Code-to-Cloud" philosophy, ensuring that every push to the `GitHubActions` branch triggers a secure, reproducible, and scalable deployment.
 
 ---
-**Author: Karanbir Singh** *Certified Azure Administrator | Aspiring Cloud & DevOps Engineer*
+
+## **🏗️ Architecture**
+![Architecture Diagram](./screenshots/architecture.jpeg)
+
+The pipeline is divided into three main logical phases:
+*   **Source & Security**: Code resides in GitHub; pushes trigger a **SonarCloud** scan to ensure code quality and security compliance.
+*   **Containerization**: The application is packaged into a **Docker** image and pushed to a registry (Docker Hub).
+*   **Automated Infrastructure**: **Terraform** manages the Azure lifecycle, deploying the serverless environment and container instances.
+
+---
+
+## **🛠️ Tech Stack**
+*   **Orchestration**: GitHub Actions
+*   **Static Analysis**: SonarCloud (Quality Gate: Passed)
+*   **Containerization**: Docker
+*   **Infrastructure as Code**: Terraform
+*   **Cloud Provider**: Microsoft Azure
+*   **Hosting**: Azure Container Apps (Serverless)
+*   **State Management**: Azure Blob Storage
+
+---
+
+## **🔧 Configuration & Secrets**
+To run this pipeline, the following secrets must be configured in GitHub:
+
+### **Azure Credentials**
+*   `ARM_CLIENT_ID`
+*   `ARM_CLIENT_SECRET`
+*   `ARM_SUBSCRIPTION_ID`
+*   `ARM_TENANT_ID`
+
+### **Docker Hub**
+*   `DOCKER_TOKEN`
+*   `DOCKER_USERNAME`
+
+### **SonarCloud**
+*   `SONAR_TOKEN`
+
+---
+
+## **🚀 Pipeline Workflow**
+
+### **1. Continuous Integration (CI)**
+*   **Trigger**: Manual dispatch or push to the `GitHubActions` branch.
+*   **Code Analysis**: Runs `sonarqube-scan-action` to verify the codebase against the quality gate.
+*   **Build & Push**: Builds a Docker image labeled with the unique `run_number` and pushes it to Docker Hub.
+
+### **2. Continuous Deployment (CD)**
+*   **IaC Execution**: Terraform initializes with a remote backend stored in Azure Storage.
+*   **Deployment**: Terraform applies the configuration to manage the website-app within the **Azure Container Apps Environment**.
+*   **Cleanup**: A manual `destroy` action is integrated into the workflow for cost-effective environment management.
+
+---
+
+## **📁 Project Structure**
+```text
+├── .github/workflows/
+│   └── ci-cd.yml          # GitHub Actions Pipeline definition
+├── terraform/
+│   ├── main.tf            # Azure Provider and Resource definitions
+│   ├── variables.tf       # Infrastructure variables
+│   └── backend.tf         # Azure Storage backend for .tfstate
+├── screenshots/
+│   └── architecture.png   # Architecture Diagram
+├── website/
+│   ├── index.html         # Application Source
+│   └── Dockerfile         # Container manifest
+└── README.md
+
+---
+**Author: Karanbir Singh** *Certified Azure Administrator(AZ-104) | Specializing in DevOps, Cloud Engineering, and Automated Infrastructure.*
